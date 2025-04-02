@@ -60,5 +60,5 @@ def detect_fall():
             threading.Thread(target=send_email_alert).start()  # Send alert in background
             break  
 
-    cap.release()
+    cap.release() 
     return jsonify({"fall_detected": detected_fall, "message": "Processing completed"}), 200

@@ -2,18 +2,27 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import LiveCameraFeed from "./pages/LiveCameraFeed";
 import PastEvents from "./pages/PastEvents";
-import Home from "./pages/Home";
 import Navbar from "./components/Navbar";
+import UploadVideo from "./pages/VideoUpload";
+import VideoPlayer from "./pages/VideoPlayer";
 
-function App () {
+function App() {
   return (
     <Router>
-      <Navbar /> {/* Add a navigation bar for easy navigation */}
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/live-camera-feed" element={<LiveCameraFeed />} />
-        <Route path="/past-events" element={<PastEvents />} />
-      </Routes>
+      <div className="w-full flex flex-col md:flex-row">
+        <div className="w-full md:w-1/4 lg:w-1/5 xl:w-1/5 flex justify-center items-center bg-red-200">
+          <Navbar /> {/* Add a navigation bar for easy navigation */}
+        </div>
+
+        <div className="w-full md:w-3/4 lg:w-4/5 xl:w-4/5 flex justify-center items-center bg-green-200">
+          <Routes className="w-full flex">            
+            <Route path="/" element={<LiveCameraFeed />} />
+            <Route path="/past-events" element={<PastEvents />} />
+            <Route path="/video-upload" element={<UploadVideo />} />
+            <Route path="/video-player" element={<VideoPlayer />} />
+          </Routes>
+        </div >
+      </div>
     </Router>
   );
 };
