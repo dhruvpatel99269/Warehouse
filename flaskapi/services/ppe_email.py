@@ -1,37 +1,66 @@
 import os
 import base64
+import datetime
+import pytz
+from dotenv import load_dotenv
 from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import Mail, Attachment, FileContent, FileName, FileType, Disposition
+from models.db import db  # Your MongoDB connection
 
-# Your SendGrid API Key
-SENDGRID_API_KEY = "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"
+# ✅ Load environment variables
+load_dotenv()
+SENDGRID_API_KEY = os.getenv("SENDGRID_API_KEY")
+
+# ✅ MongoDB Collection
+collection = db["emails_log"]
+
+# ✅ Timezones
+UTC = pytz.utc
+IST = pytz.timezone("Asia/Kolkata")
 
 def send_email_alert():
     message = Mail(
-        from_email="99269dhruvpatel@gmail.com",  # Your verified SendGrid email
-        to_emails="dhruv.patel.btech2022@sitpune.edu.in",    # Replace with the recipient's email
-        subject="🚨 PPE non-compliance!",
-        html_content="<h1>Alert!</h1><p>A ppe non compliance has been detected. See the attached image.</p>"
+        from_email="99269dhruvpatel@gmail.com",
+        to_emails="dhruv.patel.btech2022@sitpune.edu.in",
+        subject="🚨 PPE non-compliance Detected!",
+        html_content="<h1>Alert!</h1><p>PPE non compliance has been detected. See the attached image.</p>"
     )
 
-    # Read the fall detection image
-    file_path = r"E:\SEM-6 Projects\PBL-Project\flaskapi\alerts\ppe_first_violation.jpg"
+    # ✅ Read and encode the fall detection image
+    file_path = os.path.join("alerts", "ppe_first_violation.jpg")
     with open(file_path, "rb") as f:
         file_data = f.read()
-        encoded_file = base64.b64encode(file_data).decode()  # Encode file in base64
+        encoded_file = base64.b64encode(file_data).decode()  # base64 string
 
-    # Create attachment
+    # ✅ Create attachment for email
     attachment = Attachment(
         file_content=FileContent(encoded_file),
         file_type=FileType("image/jpeg"),
         file_name=FileName("ppe_alert.jpg"),
         disposition=Disposition("attachment")
     )
-    message.attachment = attachment  # Attach the image
+    message.attachment = attachment
 
-    try:
-        sg = SendGridAPIClient(SENDGRID_API_KEY)
-        response = sg.send(message)
-        print(f"✅ Email sent! Status Code: {response.status_code}")
-    except Exception as e:
-        print(f"❌ Error sending email: {str(e)}")
+    # ✅ Capture timestamps correctly
+    timestamp_utc = datetime.datetime.now(UTC)
+    timestamp_ist = timestamp_utc.astimezone(IST)
+
+    # ✅ Log email + attachment in MongoDB
+    email_data = {
+        "recipient": "dhruv.patel.btech2022@sitpune.edu.in",
+        "subject": "🚨 PPE non-compliance Detected!",
+        "timestamp": timestamp_utc,  # Store one main timestamp (UTC)
+        "status": 202,
+        "attachment": {
+            "filename": "ppe_alert.jpg",
+            "filetype": "image/jpeg",
+            "content": encoded_file  # Base64-encoded image
+        }
+    }
+    collection.insert_one(email_data)
+
+    print(f"✅ Email sent and logged at {timestamp_utc.strftime('%Y-%m-%d %H:%M:%S UTC')}")
+
+# ✅ Test the function
+if __name__ == "_main_":
+    send_email_alert()

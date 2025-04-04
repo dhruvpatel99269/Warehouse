@@ -2,6 +2,7 @@ from flask import Blueprint, request, jsonify, send_file, Response
 from models.db import fs  # Import GridFS
 import gridfs
 import io
+from bson import ObjectId
 
 video_bp = Blueprint("video_bp", __name__)
 
@@ -14,7 +15,6 @@ def upload_video():
     video_id = fs.put(video_file, filename=video_file.filename)
 
     return jsonify({"message": "Video uploaded successfully!", "video_id": str(video_id)}), 201
-
 
 @video_bp.route("/get-video/<video_id>", methods=["GET"])
 def get_video(video_id):
@@ -41,9 +41,6 @@ def get_videos():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
-
-from bson import ObjectId
-
 @video_bp.route("/stream-video/<video_id>", methods=["GET"])
 def stream_video(video_id):
     try:
@@ -53,6 +50,3 @@ def stream_video(video_id):
         return jsonify({"error": f"Video with ID {video_id} not found"}), 404
     except Exception as e:
         return jsonify({"error": str(e)}), 500
-
-
-

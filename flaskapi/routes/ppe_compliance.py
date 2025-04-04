@@ -67,6 +67,9 @@ def detect_ppe():
         print(f"Video saved at: {video_path}")
 
         cap = cv2.VideoCapture(video_path)
+        fps = cap.get(cv2.CAP_PROP_FPS)
+        print(f"Video FPS: {fps}")
+
         if not cap.isOpened():
             return jsonify({"error": "Failed to open video file"}), 400
 
