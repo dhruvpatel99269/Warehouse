@@ -1,7 +1,11 @@
+import os
 from pymongo import MongoClient
 import gridfs
+from dotenv import load_dotenv
 
-MONGO_URI = "mongodb+srv://99269dhruvpatel:Dhruv99269@node-tuts.cc8rxtp.mongodb.net/"  # Use .env or fallback
+load_dotenv()
+
+MONGO_URI = os.getenv("MONGO_URI")
 
 client = MongoClient(MONGO_URI)
 db = client.get_database("surveillance")
