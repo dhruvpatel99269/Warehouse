@@ -1,5 +1,6 @@
-import { useEffect, useState, useMemo } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
+import toast from "react-hot-toast";
 
 const EmailLogs = () => {
     const [emailLogs, setEmailLogs] = useState([]);
@@ -8,14 +9,29 @@ const EmailLogs = () => {
     const [sortOrder, setSortOrder] = useState("Recent");
 
     useEffect(() => {
+        fetchLogs();
+    }, []);
+
+    const fetchLogs = () => {
         axios
             .get("http://localhost:5000/email-logs")
             .then((response) => {
-                console.log("API Response:", response.data);
                 setEmailLogs(Array.isArray(response.data.email_logs) ? response.data.email_logs : []);
             })
             .catch((error) => console.error("Error fetching email logs:", error));
-    }, []);
+    };
+
+    const handleDelete = async (id) => {
+        if (!window.confirm("Are you sure you want to delete this email log?")) return;
+
+        try {
+            await axios.delete(`http://localhost:5000/email-logs/${id}`);
+            toast.success("Log deleted successfully");
+            fetchLogs();
+        } catch (err) {
+            toast.error("Failed to delete log");
+        }
+    };
 
     const filteredLogs = emailLogs
         .filter((log) =>
@@ -34,11 +50,11 @@ const EmailLogs = () => {
         <div className="w-full min-h-screen bg-blue-100 p-6">
             <h2 className="text-3xl font-bold mb-6 text-gray-800">📩 Email Logs</h2>
 
-            {/* 🔍 Search & Filter Section */}
+            {/* 🔍 Search & Filter */}
             <div className="mb-4 flex flex-col md:flex-row gap-4">
                 <input
                     type="text"
-                    placeholder="Search by subject/category..."
+                    placeholder="Search by subject..."
                     className="px-4 py-2 border border-gray-300 rounded-md w-64"
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
@@ -72,13 +88,22 @@ const EmailLogs = () => {
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     {filteredLogs.map((log) => (
                         <div
-                            key={log.id || log.timestamp_ist} // fallback in case no ID
-                            className="bg-white shadow-lg rounded-xl p-5 border border-gray-200 transition-transform transform hover:scale-105"
+                            key={log._id}
+                            className="bg-white shadow-lg rounded-xl p-5 border border-gray-200 transition-transform transform hover:scale-105 relative"
                         >
-                            <h3 className="text-xl font-semibold text-gray-700">{log.subject}</h3>
-                            <p className="text-sm text-gray-500"><strong>Recipient:</strong> {log.recipient}</p>
-                            <p className="text-sm text-gray-500"><strong>Status:</strong> {log.status}</p>
-                            <p className="text-xs text-gray-400">📅 {log.timestamp_ist ? new Date(log.timestamp_ist).toLocaleString() : "N/A"}</p>
+                            <button
+                                onClick={() => handleDelete(log._id)}
+                                className="absolute top-2 right-2 text-red-500 hover:text-red-700 text-sm"
+                            >
+                                ❌
+                            </button>
+
+                            <h3 className="text-xl font-semibold text-gray-700">{log.subject || "No Subject"}</h3>
+                            <p className="text-sm text-gray-500"><strong>Recipient:</strong> {log.recipient || "N/A"}</p>
+                            <p className="text-sm text-gray-500"><strong>Status:</strong> {log.status || "N/A"}</p>
+                            <p className="text-xs text-gray-400">
+                                📅 {log.timestamp_ist || "N/A"}
+                            </p>
 
                             {log.attachment?.content && (
                                 <div className="mt-4 p-3 border rounded-lg bg-gray-100">
