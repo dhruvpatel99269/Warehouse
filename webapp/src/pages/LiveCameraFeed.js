@@ -5,8 +5,7 @@ import { useSwipeable } from "react-swipeable";
 const LiveCameraFeed = () => {
   const [cameras, setCameras] = useState([]);
   const [page, setPage] = useState(0);
-
-  const videosPerPage = 4; // 4 videos per page (2 per row x 2 rows)
+  const videosPerPage = 4;
 
   useEffect(() => {
     const fetchCameras = async () => {
@@ -17,7 +16,6 @@ const LiveCameraFeed = () => {
         console.error("Error fetching camera feeds:", error);
       }
     };
-
     fetchCameras();
   }, []);
 
@@ -29,7 +27,6 @@ const LiveCameraFeed = () => {
     if (page > 0) setPage(page - 1);
   };
 
-  // Swipe Handlers for Mobile
   const handlers = useSwipeable({
     onSwipedLeft: nextPage,
     onSwipedRight: prevPage,
@@ -38,33 +35,44 @@ const LiveCameraFeed = () => {
   });
 
   return (
-    <div className="w-full min-h-screen flex flex-col items-center px-4 py-4">
-      <h1 className="text-2xl font-bold mb-4">Live Camera Feeds</h1>
+    <div className="w-full min-h-screen flex flex-col items-center justify-start px-4 py-4 bg-gradient-to-br from-indigo-900 via-purple-900 to-gray-900 text-white">
+      <h1 className="flex justify-center items-center text-xl sm:text-2xl font-bold mb-4 tracking-wide animate-fade-in w-full">
+        <span className="animate-pulse text-md sm:text-xl">🔴</span>
+        <span>Live Camera Feeds</span> 
+      </h1>
 
-      {/* Desktop & Tablet View (2x2 Grid with Pagination) */}
-      <div className="hidden sm:grid grid-cols-1 md:grid-cols-2 gap-6 w-full max-w-5xl">
-        {cameras.slice(page * videosPerPage, (page + 1) * videosPerPage).map((camera, index) => (
-          <div key={index} className="w-full h-70 flex justify-center items-center bg-gray-800 rounded-lg shadow-lg">
-            <video
-              src={camera.videoUrl}
-              className="w-full h-full object-cover rounded-lg"
-              controls
-              autoPlay
-              loop
-              muted
-            />
-          </div>
-        ))}
-      </div>
-
-      {/* Mobile View (Swipeable) */}
-      <div {...handlers} className="sm:hidden w-full overflow-hidden">
-        <div className="flex gap-4 w-full overflow-x-auto snap-x snap-mandatory">
-          {cameras.map((camera, index) => (
-            <div key={index} className="snap-center w-full flex-shrink-0">
+      {/* Grid View */}
+      <div className="hidden sm:grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-8 w-full animate-fade-in px-0 md:px-6 lg:px-12 xl:px-12 py-2">
+        {cameras
+          .slice(page * videosPerPage, (page + 1) * videosPerPage)
+          .map((camera, index) => (
+            <div
+              key={index}
+              className="bg-white/10 backdrop-blur-md p-2 rounded-2xl shadow-2xl transform transition-transform hover:scale-105"
+            >
               <video
                 src={camera.videoUrl}
-                className="w-full h-60 object-cover rounded-lg shadow-lg"
+                className="w-full h-64 object-cover rounded-xl"
+                controls
+                autoPlay
+                loop
+                muted
+              />
+            </div>
+          ))}
+      </div>
+
+      {/* Mobile Swipe View */}
+      <div {...handlers} className="sm:hidden w-full overflow-hidden mt-4 animate-fade-in">
+        <div className="flex gap-4 overflow-x-auto snap-x snap-mandatory px-2 pb-4">
+          {cameras.map((camera, index) => (
+            <div
+              key={index}
+              className="snap-center w-full flex-shrink-0 bg-white/10 backdrop-blur-md rounded-2xl shadow-lg p-2"
+            >
+              <video
+                src={camera.videoUrl}
+                className="w-full h-64 object-cover rounded-xl"
                 controls
                 autoPlay
                 loop
@@ -75,21 +83,25 @@ const LiveCameraFeed = () => {
         </div>
       </div>
 
-      {/* Pagination Buttons (for Desktop & Tablet) */}
-      <div className="hidden sm:flex gap-4 mt-4">
+      {/* Pagination Buttons */}
+      <div className="hidden sm:flex gap-4 mt-6 animate-fade-in">
         <button
-          className="px-4 py-2 bg-gray-700 text-white rounded-lg disabled:opacity-50"
           onClick={prevPage}
           disabled={page === 0}
+          className={`px-6 py-2 rounded-xl transition-all duration-300 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-indigo-700 hover:to-purple-700 text-white font-semibold shadow-md ${
+            page === 0 ? "opacity-40 cursor-not-allowed" : ""
+          }`}
         >
-          Prev
+          ⬅ Prev
         </button>
         <button
-          className="px-4 py-2 bg-gray-700 text-white rounded-lg disabled:opacity-50"
           onClick={nextPage}
           disabled={(page + 1) * videosPerPage >= cameras.length}
+          className={`px-6 py-2 rounded-xl transition-all duration-300 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-indigo-700 hover:to-purple-700 text-white font-semibold shadow-md ${
+            (page + 1) * videosPerPage >= cameras.length ? "opacity-40 cursor-not-allowed" : ""
+          }`}
         >
-          Next
+          Next ➡
         </button>
       </div>
     </div>
