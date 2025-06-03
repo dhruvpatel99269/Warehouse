@@ -1,4 +1,5 @@
 # AI-Powered Warehouse Surveillance System
+![Title-Image](assets/title-image.png)
 
 ## Overview
 The AI-Powered Warehouse Surveillance System is an advanced solution designed to enhance safety, security, and operational efficiency in warehouse environments. This project addresses the limitations of traditional surveillance systems by integrating three specialized machine learning (ML) models for **Personal Protective Equipment (PPE) compliance**, **fall detection**, and **fire detection**. Built using **YOLOv8** for real-time object detection, a **Flask API** backend, and a **React-based** frontend dashboard, the system provides automated threat detection, real-time alerts, and actionable insights.
