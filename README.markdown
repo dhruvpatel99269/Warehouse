@@ -24,7 +24,7 @@ This project aims to overcome these limitations by developing an intelligent, AI
 ## System Architecture
 The system architecture is designed to handle real-time surveillance efficiently, consisting of four main phases: Data Preprocessing & Video Frame Extraction, Object Detection, Tracking & Classification, Activity Recognition & Anomaly Detection, and Automated Video Summarization & Real-Time Alerts. Below is the diagram illustrating the system architecture:
 
-![System Architecture Diagram](assets/system-architecture.png)
+![System Architecture Diagram](assets/system-architecture.jpg)
 
 ## Methodology
 The system follows a four-phase architecture:  
