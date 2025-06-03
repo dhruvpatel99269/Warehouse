@@ -1,14 +1,7 @@
 # AI-Powered Warehouse Surveillance System
 
 ## Overview
-The AI-Powered Warehouse Surveillance System is an advanced solution designed to enhance safety, security, and operational efficiency in warehouse environments. This project addresses the limitations of traditional surveillance systems by integrating three specialized machine learning (ML) models for **Personal Protective Equipment (PPE) compliance**, **fall detection**, and **fire detection**. Built using **YOLOv8** for real-time object detection, a **Flask API** backend, and a **React-based** frontend dashboard, the system provides automated threat detection, real-time alerts, and actionable insights. Developed as part of a Bachelor of Technology project at Symbiosis Institute of Technology, Pune, this system significantly improves workplace safety and operational efficiency in high-risk warehouse settings.
-
-The project was carried out by:  
-- Vasu Desai (22070122050)  
-- Dhaval Bhimani (22070122051)  
-- Dhruv Patel (22070122054)  
-- Harsh Kharwar (22070122074)  
-Under the guidance of Dr. Deepali Vora and Prof. Shubhangi Deokar.
+The AI-Powered Warehouse Surveillance System is an advanced solution designed to enhance safety, security, and operational efficiency in warehouse environments. This project addresses the limitations of traditional surveillance systems by integrating three specialized machine learning (ML) models for **Personal Protective Equipment (PPE) compliance**, **fall detection**, and **fire detection**. Built using **YOLOv8** for real-time object detection, a **Flask API** backend, and a **React-based** frontend dashboard, the system provides automated threat detection, real-time alerts, and actionable insights.
 
 ## Problem Statement
 Warehouses face significant safety and security challenges, with injury rates of **4.8 per 100 full-time workers** (compared to the industry average of 2.7) and fatality rates of **14.6 per 100,000 employees** in the transportation and material moving sector (2022 data). Traditional surveillance systems are hindered by:  
@@ -67,7 +60,6 @@ The system follows a four-phase architecture:
   - **PPE Compliance**: 2,700 images (helmets, vests, boots, gloves, goggles, non-compliance classes).  
   - **Fall Detection**: 4,000 images (down, up classes).  
   - **Fire Detection**: 9,000 images (fire, smoke, normal classes).  
-- **Deployment**: Models deployed on edge devices (e.g., NVIDIA Jetson) or cloud servers.  
 
 ## Results and Analysis
 - **Object Detection**:  
@@ -102,9 +94,3 @@ The system follows a four-phase architecture:
 
 ## Impact
 This system addresses critical warehouse safety challenges, reducing injury and fatality rates while improving operational efficiency. By automating threat detection and compliance monitoring, it minimizes human error, enhances response times, and supports scalable deployment, making it a valuable tool for modern warehouse management.
-
-## Screenshots
-*Add a screenshot of the React dashboard displaying real-time camera feeds with annotated detections (e.g., bounding boxes around workers indicating PPE compliance, fall alerts, or fire detection). You can use the mockup generated earlier for this purpose.*
-
-## License
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
